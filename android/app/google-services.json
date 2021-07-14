@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "493480580884",
+    "project_id": "onebutton-9feac",
+    "storage_bucket": "onebutton-9feac.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:493480580884:android:120f97ee34d68e5037d401",
+        "android_client_info": {
+          "package_name": "com.onebutton"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "493480580884-o2nqdm2t29tso5ic1nct3noludjejan2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZq24k3RI2XDhw1phCisbgOWnMRj3RTiU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "493480580884-o2nqdm2t29tso5ic1nct3noludjejan2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
