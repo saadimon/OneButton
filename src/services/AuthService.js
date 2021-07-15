@@ -3,7 +3,7 @@ import firestore from '@react-native-firebase/firestore';
 
 const usersCollection = firestore().collection('Users');
 
-const createUserInDB = (uid, email, username, picture) =>
+const createUserInDB = (uid, email, username) =>
   new Promise((resolve, reject) => {
     usersCollection
       .doc(uid)
@@ -11,8 +11,8 @@ const createUserInDB = (uid, email, username, picture) =>
         email,
         username,
         fullName: username,
-        profilePicture: picture,
-        friends: [],
+        freePoints: 10,
+        paidPoints: 0,
       })
       .then(res => resolve(true))
       .catch(e => reject(e));
@@ -50,6 +50,8 @@ export class AuthService {
         .catch(e => reject(e.code));
     });
   }
+
+  /**TODO: set up password reset here */
   static sendPasswordResetEmail(email) {
     return new Promise((resolve, reject) => {
       auth()
@@ -58,7 +60,7 @@ export class AuthService {
           handleCodeInApp: true,
           android: {
             installApp: true,
-            packageName: 'com.oneup',
+            packageName: 'com.onebutton',
           },
           iOS: {bundleId: 'TODO: add bundleId here'},
         })
@@ -66,6 +68,7 @@ export class AuthService {
         .catch(e => reject(e.code));
     });
   }
+
   static confirmPasswordReset(code, newPassword) {
     return new Promise((resolve, reject) => {
       auth()

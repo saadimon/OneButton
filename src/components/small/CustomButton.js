@@ -21,10 +21,15 @@ function CustomButton({
   style,
   filled,
   bottomShadow,
+  disabled,
   ...props
 }) {
   return (
-    <TouchableOpacity onPress={onPress} onLongPress={onLongPress} {...props}>
+    <TouchableOpacity
+      onPress={onPress}
+      disabled={disabled}
+      onLongPress={onLongPress}
+      {...props}>
       <View
         style={{
           paddingHorizontal: variables.getSize(85),

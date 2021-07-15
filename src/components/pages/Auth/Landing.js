@@ -1,15 +1,16 @@
 import React from 'react';
-import {View, ScrollView} from 'react-native';
+import {View} from 'react-native';
 import Logo from '../../../assets/icons/logo.svg';
 import H1 from '../../text/H1';
 import H4 from '../../text/H4';
 import CustomButton from '../../small/CustomButton';
-import AUTH_NAVIGATION from '../../../assets/data/enums/AuthNavigation';
+import AUTH_NAVIGATION from '../../../data/enums/AuthNavigation';
+import ScrollViewWithoutBar from '../../small/ScrollViewWithoutBar';
 function Landing({navigation, ...props}) {
   return (
-    <ScrollView style={{flex: 1, paddingHorizontal: 50}}>
+    <ScrollViewWithoutBar style={{flex: 1, paddingHorizontal: 50}}>
       <View style={{marginTop: 110, marginBottom: 50, alignItems: 'center'}}>
-        <Logo />
+        <Logo width={220} height={200} />
       </View>
       <View style={{alignItems: 'center', marginBottom: 50}}>
         <H1>OneButton!</H1>
@@ -22,7 +23,7 @@ function Landing({navigation, ...props}) {
             Log in
           </CustomButton>
         </View>
-        <View>
+        <View style={{marginBottom: 20}}>
           <CustomButton
             filled
             onPress={() => navigation.navigate(AUTH_NAVIGATION.SIGN_UP)}>
@@ -30,7 +31,7 @@ function Landing({navigation, ...props}) {
           </CustomButton>
         </View>
       </View>
-    </ScrollView>
+    </ScrollViewWithoutBar>
   );
 }
 

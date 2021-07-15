@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Image, ScrollView, View, Keyboard} from 'react-native';
+import {Image, View, Keyboard, Platform} from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 import ProfileIcon from '../../../assets/icons/profile_signup.png';
 import PlusIcon from '../../../assets/icons/plus_signup.svg';
@@ -9,6 +9,11 @@ import variables from '../../../util/variables';
 import InfoText from '../../text/InfoText';
 import SubText from '../../text/SubText';
 import CustomButton from '../../small/CustomButton';
+import ScrollViewWithoutBar from '../../small/ScrollViewWithoutBar';
+import {AuthService} from '../../../services/AuthService';
+import LoadingIndicator from '../../small/LoadingIndicator';
+import Alert from '../../../util/Alert';
+import ALERT_TYPES from '../../../data/enums/AlertTypes';
 
 function Signup() {
   const [userName, setUserName] = useState('');
@@ -17,6 +22,7 @@ function Signup() {
   const [termsAgree, setTermsAgree] = useState(false);
   const [promotionAgree, setPromotionAgree] = useState(false);
   const [keyboardOpen, setKeyboardOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const openListener = Keyboard.addListener('keyboardDidShow', () => {
@@ -31,20 +37,27 @@ function Signup() {
     };
   }, []);
 
+  const onSignup = () => {
+    setLoading(true);
+    AuthService.signup(email, password, userName)
+      .catch(e => Alert(ALERT_TYPES.ERROR, e.code))
+      .finally(() => setLoading(false));
+  };
+
   return (
-    <View style={{flex: 1}}>
+    <LoadingIndicator loading={loading} style={{flex: 1}}>
       <View
         style={{
           flex: 1,
           paddingHorizontal: variables.marginHorizontalAuthPages,
           paddingTop: variables.getSize(24),
         }}>
-        <H2>Sign up</H2>
-        <ScrollView
+        <ScrollViewWithoutBar
           style={{
             alignSelf: 'center',
             width: '100%',
           }}>
+          <H2>Sign up</H2>
           <View
             style={{
               flexDirection: 'row',
@@ -61,12 +74,14 @@ function Signup() {
               style={{marginTop: 24}}
               placeholder="username"
               value={userName}
+              autocapitalize={false}
               onChangeText={e => setUserName(e)}
             />
             <CustomInput
               style={{marginTop: variables.padding}}
               placeholder="email"
               value={email}
+              autocapitalize={false}
               onChangeText={e => setEmail(e)}
               keyboardType="email-address"
             />
@@ -74,6 +89,7 @@ function Signup() {
               style={{marginTop: variables.padding}}
               placeholder="password"
               value={password}
+              autocapitalize={false}
               onChangeText={e => setPassword(e)}
               secureTextEntry={true}
             />
@@ -86,9 +102,11 @@ function Signup() {
                 marginTop: variables.padding,
               }}>
               <CheckBox
+                disabled={loading}
                 tintColors={{true: '', false: '#ccc'}}
                 value={termsAgree}
                 onValueChange={e => setTermsAgree(e)}
+                style={{marginRight: Platform.OS == 'android' ? 0 : 10}}
               />
               <SubText>
                 By clicking here, you agree to our terms and services.
@@ -101,17 +119,21 @@ function Signup() {
                 marginTop: variables.padding,
               }}>
               <CheckBox
+                disabled={loading}
                 tintColors={{true: '', false: '#ccc'}}
                 value={promotionAgree}
                 onValueChange={e => setPromotionAgree(e)}
+                style={{marginRight: Platform.OS == 'android' ? 0 : 10}}
               />
               <SubText>Please send me promotional emails :)</SubText>
             </View>
             <View style={{marginVertical: variables.paddingLarge}}>
-              <CustomButton filled>Sign up</CustomButton>
+              <CustomButton onPress={onSignup} disabled={loading} filled>
+                Sign up
+              </CustomButton>
             </View>
           </View>
-        </ScrollView>
+        </ScrollViewWithoutBar>
       </View>
       {!keyboardOpen && (
         <View
@@ -125,7 +147,7 @@ function Signup() {
           </InfoText>
         </View>
       )}
-    </View>
+    </LoadingIndicator>
   );
 }
 
