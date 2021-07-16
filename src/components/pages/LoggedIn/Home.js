@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Dimensions, TouchableOpacity, View} from 'react-native';
-import {AuthService} from '../../../services/AuthService';
+import AuthService from '../../../services/AuthService';
 import variables from '../../../util/variables';
 import CustomButton from '../../small/CustomButton';
 import H1 from '../../text/H1';

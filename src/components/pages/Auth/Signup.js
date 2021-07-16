@@ -10,7 +10,7 @@ import InfoText from '../../text/InfoText';
 import SubText from '../../text/SubText';
 import CustomButton from '../../small/CustomButton';
 import ScrollViewWithoutBar from '../../small/ScrollViewWithoutBar';
-import {AuthService} from '../../../services/AuthService';
+import AuthService from '../../../services/AuthService';
 import LoadingIndicator from '../../small/LoadingIndicator';
 import Alert from '../../../util/Alert';
 import ALERT_TYPES from '../../../data/enums/AlertTypes';

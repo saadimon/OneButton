@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {View} from 'react-native';
 import ALERT_TYPES from '../../../data/enums/AlertTypes';
-import {AuthService} from '../../../services/AuthService';
+import AuthService from '../../../services/AuthService';
 import Alert from '../../../util/Alert';
 import variables from '../../../util/variables';
 import CustomButton from '../../small/CustomButton';

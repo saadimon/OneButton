@@ -18,7 +18,7 @@ const createUserInDB = (uid, email, username) =>
       .catch(e => reject(e));
   });
 
-export class AuthService {
+export default class AuthService {
   static getOwnUid = () => auth().currentUser.uid;
 
   static login(email, password) {
