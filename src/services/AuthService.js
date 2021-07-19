@@ -1,5 +1,6 @@
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import data from '../data';
 
 const usersCollection = firestore().collection('Users');
 
@@ -10,9 +11,12 @@ const createUserInDB = (uid, email, username) =>
       .set({
         email,
         username,
-        fullName: username,
+        name: username,
         freePoints: 10,
         paidPoints: 0,
+        games: [],
+        clicks: 0,
+        gamesWon: 0,
       })
       .then(res => resolve(true))
       .catch(e => reject(e));
@@ -20,6 +24,32 @@ const createUserInDB = (uid, email, username) =>
 
 export default class AuthService {
   static getOwnUid = () => auth().currentUser.uid;
+
+  static getUserObj = () =>
+    new Promise(resolve => {
+      usersCollection
+        .doc(AuthService.getOwnUid())
+        .get()
+        .then(doc => resolve(data.getDataFromFirebaseDoc(doc)))
+        .catch(e => {
+          console.log(e);
+          resolve(false);
+        });
+    });
+
+  static updateOwnUser = ({name}) =>
+    new Promise(resolve => {
+      const updateObj = {};
+      if (name) {
+        updateObj.name = name;
+        updateObj.username = name;
+      }
+      usersCollection
+        .doc(AuthService.getOwnUid())
+        .update(updateObj)
+        .then(() => resolve(true))
+        .catch(e => resolve(false));
+    });
 
   static login(email, password) {
     return new Promise((resolve, reject) => {

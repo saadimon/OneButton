@@ -8,6 +8,13 @@ import Signup from '../components/pages/Auth/Signup';
 import Login from '../components/pages/Auth/Login';
 import auth from '@react-native-firebase/auth';
 import Home from '../components/pages/LoggedIn/Home';
+import LOGGED_IN_NAVIGATION from '../data/enums/LoggedInNavigation';
+import SearchGames from '../components/pages/LoggedIn/SearchGames';
+import CreateGame from '../components/pages/LoggedIn/CreateGame';
+import InGame from '../components/pages/LoggedIn/InGame';
+import Profile from '../components/pages/LoggedIn/Profile';
+import UpdatePassword from '../components/pages/LoggedIn/UpdatePassword';
+import Scoreboard from '../components/pages/LoggedIn/Scoreboard';
 
 const MyTheme = {
   ...DefaultTheme,
@@ -19,6 +26,7 @@ const MyTheme = {
 };
 
 const AuthNav = createStackNavigator();
+const LoggedInNav = createStackNavigator();
 
 const AuthNavigation = () => (
   <NavigationContainer theme={MyTheme}>
@@ -29,6 +37,40 @@ const AuthNavigation = () => (
       <AuthNav.Screen name={AUTH_NAVIGATION.SIGN_UP} component={Signup} />
       <AuthNav.Screen name={AUTH_NAVIGATION.LOG_IN} component={Login} />
     </AuthNav.Navigator>
+  </NavigationContainer>
+);
+
+const LoggedInNavigation = () => (
+  <NavigationContainer theme={MyTheme}>
+    <LoggedInNav.Navigator
+      initialRouteName={LOGGED_IN_NAVIGATION.HOME}
+      headerMode="none">
+      <LoggedInNav.Screen name={LOGGED_IN_NAVIGATION.HOME} component={Home} />
+      <LoggedInNav.Screen
+        name={LOGGED_IN_NAVIGATION.SEARCH_GAMES}
+        component={SearchGames}
+      />
+      <LoggedInNav.Screen
+        name={LOGGED_IN_NAVIGATION.CREATE_GAME}
+        component={CreateGame}
+      />
+      <LoggedInNav.Screen
+        name={LOGGED_IN_NAVIGATION.IN_GAME}
+        component={InGame}
+      />
+      <LoggedInNav.Screen
+        name={LOGGED_IN_NAVIGATION.PROFILE}
+        component={Profile}
+      />
+      <LoggedInNav.Screen
+        name={LOGGED_IN_NAVIGATION.CHANGE_PASSWORD}
+        component={UpdatePassword}
+      />
+      <LoggedInNav.Screen
+        name={LOGGED_IN_NAVIGATION.SCOREBOARD}
+        component={Scoreboard}
+      />
+    </LoggedInNav.Navigator>
   </NavigationContainer>
 );
 
@@ -48,7 +90,7 @@ function AppNavigator() {
 
   if (initializing) return null;
 
-  return !user ? <AuthNavigation /> : <Home />;
+  return !user ? <AuthNavigation /> : <LoggedInNavigation />;
 }
 
 export default AppNavigator;

@@ -14,14 +14,16 @@ export const createGameObject = name => {
     status: GAME_STATUS.ACTIVE,
     creator: userId,
     count: 0,
+    creation_date: firestore.FieldValue.serverTimestamp(),
   };
 };
 
 export default class GameService {
-  static getActiveGames = () =>
-    new Promise((resolve, reject) => {
+  static getActiveGames = (limit = 10) =>
+    new Promise(resolve => {
       gamesRef
         .where('status', '==', GAME_STATUS.ACTIVE)
+        .limit(limit)
         .get()
         .then(res => {
           resolve(data.getListOfDocsFromFirebaseQuery(res.docs));
@@ -32,7 +34,22 @@ export default class GameService {
         });
     });
 
-  static listenToGame = gameId => gamesRef.doc(gameId).onSnapshot;
+  static getMyGames = (limit = 10) =>
+    new Promise(resolve => {
+      gamesRef
+        .where('players', 'array-contains', AuthService.getOwnUid())
+        .limit(limit)
+        .get()
+        .then(res => {
+          resolve(data.getListOfDocsFromFirebaseQuery(res.docs));
+        })
+        .catch(e => {
+          console.log(e);
+          resolve([]);
+        });
+    });
+
+  // static listenToGame = gameId => gamesRef.doc(gameId).onSnapshot;
   static buttonClick = gameId =>
     new Promise((resolve, reject) => {
       const userId = AuthService.getOwnUid();
@@ -44,17 +61,21 @@ export default class GameService {
           const gameData = doc.data();
           if (gameData.count < 99) {
             /** Handle Normal Click */
-            doc.ref.update({count: firestore.FieldValue.increment});
-            userDoc.update({clicks: firestore.FieldValue.increment});
+            doc.ref.update({count: firestore.FieldValue.increment(1)});
+            userDoc.update({clicks: firestore.FieldValue.increment(1)});
             resolve(BUTTON_RESPONSE.ADDED);
           } else if (gameData.count == 99) {
             /** Handle Win */
             doc.ref.update({
-              count: firestore.FieldValue.increment,
+              count: firestore.FieldValue.increment(1),
               winner: userId,
-              clicks: firestore.FieldValue.increment,
+              status: GAME_STATUS.COMPLETED,
             });
-            userDoc.update({gamesWon: firestore.FieldValue.increment});
+            userDoc.update({
+              gamesWon: firestore.FieldValue.increment(1),
+              clicks: firestore.FieldValue.increment(1),
+            });
+            resolve(BUTTON_RESPONSE.GAME_WIN);
           } else {
             /** Handle Game Completed Already */
             resolve(BUTTON_RESPONSE.TOO_LATE);
@@ -64,6 +85,7 @@ export default class GameService {
   static joinGame = gameId =>
     new Promise(async resolve => {
       const userId = AuthService.getOwnUid();
+      console.log(AuthService.getOwnUid());
       const userDoc = usersRef.doc(userId);
       const transaction1 = gamesRef.doc(gameId).update({
         players: firestore.FieldValue.arrayUnion(AuthService.getOwnUid()),
@@ -82,7 +104,7 @@ export default class GameService {
     });
 
   static createGame = name =>
-    new Promise(resolve => {
+    new Promise(async resolve => {
       const userId = AuthService.getOwnUid();
       const userDoc = usersRef.doc(userId);
       try {
@@ -91,10 +113,21 @@ export default class GameService {
         await userDoc.update({
           games: firestore.FieldValue.arrayUnion(gameId),
         });
-        resolve(true);
+        resolve(transaction1.id);
       } catch (e) {
         console.log(e);
         resolve(false);
       }
+    });
+
+  static getHighScores = (prevDoc, limit = 10) =>
+    new Promise(resolve => {
+      usersRef
+        .orderBy('gamesWon', 'desc')
+        .limit(10)
+        // .startAfter(prevDoc)
+        .get()
+        .then(docs => resolve(data.getListOfDocsFromFirebaseQuery(docs)))
+        .catch(e => resolve([]));
     });
 }
