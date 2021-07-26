@@ -42,7 +42,7 @@ function Login() {
                 placeholder="email or username"
                 value={email}
                 onChangeText={e => setEmail(e)}
-                autocapitalize={false}
+                autoCapitalize={'none'}
                 keyboardType="email-address"
               />
             </View>

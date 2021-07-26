@@ -29,13 +29,17 @@ const MyTheme = {
 const AuthNav = createStackNavigator();
 const LoggedInNav = createStackNavigator();
 
-const AuthNavigation = () => (
+const AuthNavigation = ({setFirstLogin}) => (
   <NavigationContainer theme={MyTheme}>
     <AuthNav.Navigator
       initialRouteName={AUTH_NAVIGATION.LANDING}
       headerMode="none">
       <AuthNav.Screen name={AUTH_NAVIGATION.LANDING} component={Landing} />
-      <AuthNav.Screen name={AUTH_NAVIGATION.SIGN_UP} component={Signup} />
+      <AuthNav.Screen
+        name={AUTH_NAVIGATION.SIGN_UP}
+        initialParams={{setFirstLogin}}
+        component={Signup}
+      />
       <AuthNav.Screen name={AUTH_NAVIGATION.LOG_IN} component={Login} />
     </AuthNav.Navigator>
   </NavigationContainer>
@@ -108,7 +112,7 @@ function AppNavigator() {
   if (initializing) return null;
 
   return !user ? (
-    <AuthNavigation />
+    <AuthNavigation setFirstLogin={setFirstLogin} />
   ) : (
     <LoggedInNavigation firstLogin={firstLogin} />
   );

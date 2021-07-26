@@ -15,7 +15,7 @@ import LoadingIndicator from '../../small/LoadingIndicator';
 import Alert from '../../../util/Alert';
 import ALERT_TYPES from '../../../data/enums/AlertTypes';
 
-function Signup() {
+function Signup({route}) {
   const [userName, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -38,9 +38,14 @@ function Signup() {
   }, []);
 
   const onSignup = () => {
+    const {setFirstLogin} = route.params;
+    setFirstLogin(true);
     setLoading(true);
     AuthService.signup(email, password, userName)
-      .catch(e => Alert(ALERT_TYPES.ERROR, e.code))
+      .catch(e => {
+        setFirstLogin(false);
+        Alert(ALERT_TYPES.ERROR, e.code);
+      })
       .finally(() => setLoading(false));
   };
 
@@ -74,14 +79,14 @@ function Signup() {
               style={{marginTop: 24}}
               placeholder="username"
               value={userName}
-              autocapitalize={false}
+              autoCapitalize={'none'}
               onChangeText={e => setUserName(e)}
             />
             <CustomInput
               style={{marginTop: variables.padding}}
               placeholder="email"
               value={email}
-              autocapitalize={false}
+              autoCapitalize={'none'}
               onChangeText={e => setEmail(e)}
               keyboardType="email-address"
             />
@@ -89,7 +94,7 @@ function Signup() {
               style={{marginTop: variables.padding}}
               placeholder="password"
               value={password}
-              autocapitalize={false}
+              autoCapitalize={'none'}
               onChangeText={e => setPassword(e)}
               secureTextEntry={true}
             />
