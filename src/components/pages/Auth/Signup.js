@@ -143,7 +143,7 @@ function Signup({route}) {
       {!keyboardOpen && (
         <View
           style={{
-            backgroundColor: variables.colorPurple,
+            backgroundColor: variables.colorPurpleLight,
             paddingVertical: variables.getSize(17),
             paddingHorizontal: variables.getSize(70),
           }}>

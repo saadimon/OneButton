@@ -13,7 +13,10 @@ const variables = {
   /**Colors */
   colorPrimary: 'rgba(51, 0,255,1)',
   colorWhite: 'rgba(255,255,255,1)',
-  colorPurple: 'rgba(166, 21, 189, 1)',
+  colorPurpleLight: 'rgba(166, 21, 189, 1)',
+  colorPurpleMedium: 'rgba(85, 47, 134, 1)',
+  colorPurpleDark: 'rgba(61, 0, 138, 1)',
+  colorPurpleDark2: '#2A005F',
   colorCard: 'rgba(242, 242, 242, 1)',
 
   /** Styling */

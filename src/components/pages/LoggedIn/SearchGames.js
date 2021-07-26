@@ -10,10 +10,13 @@ import LOGGED_IN_NAVIGATION from '../../../data/enums/LoggedInNavigation';
 import Alert from '../../../util/Alert';
 import ALERT_TYPES from '../../../data/enums/AlertTypes';
 import AuthService from '../../../services/AuthService';
+import CustomInput from '../../small/CustomInput';
+import CustomButton from '../../small/CustomButton';
 
 function SearchGames({navigation}) {
   const [loading, setLoading] = useState(false);
   const [games, setGames] = useState([]);
+  const [gameCode, setGameCode] = useState('');
 
   const getActiveGames = async () => {
     setLoading(true);
@@ -41,6 +44,19 @@ function SearchGames({navigation}) {
     navigation.navigate(LOGGED_IN_NAVIGATION.IN_GAME, {gameId: game.id});
   };
 
+  const onEnterCode = () => {
+    if (gameCode.length == 6)
+      GameService.findGameFromCode(gameCode)
+        .then(game => {
+          if (game) {
+            if (game.players.includes(AuthService.getOwnUid()))
+              onEnterGame(game);
+            else onJoinGame(game);
+          } else Alert(ALERT_TYPES.ERROR, 'Game not found!');
+        })
+        .finally(setGameCode(''));
+  };
+
   return (
     <LoadingIndicator loading={loading}>
       <View
@@ -49,6 +65,29 @@ function SearchGames({navigation}) {
           paddingHorizontal: variables.marginHorizontalAuthPages,
         }}>
         <H2>Search Games</H2>
+        <View
+          style={{
+            flexDirection: 'row',
+            marginVertical: variables.getSize(15),
+            alignItems: 'center',
+          }}>
+          <CustomInput
+            value={gameCode}
+            onChangeText={e => setGameCode(e)}
+            style={{flex: 1, textAlign: 'center'}}
+            placeholder="Join by code"
+            caretHidden={true}
+          />
+          <CustomButton
+            onPress={onEnterCode}
+            filled
+            style={{
+              paddingHorizontal: 15,
+              justifyContent: 'center',
+            }}>
+            Join
+          </CustomButton>
+        </View>
         <View style={{flex: 1}}>
           <ScrollView
             style={{

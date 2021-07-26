@@ -10,6 +10,8 @@ const Alert = (type, message) => {
       break;
     case ALERT_TYPES.SUCCESS:
       alert('success: ' + message);
+    case ALERT_TYPES.INFO:
+      alert('Info: ' + message);
       break;
     default:
       alert(message);

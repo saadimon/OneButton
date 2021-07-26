@@ -3,6 +3,7 @@ import data from '../data';
 import BUTTON_RESPONSE from '../data/enums/ButtonResponse';
 import GAME_STATUS from '../data/enums/GameStatus';
 import AuthService from './AuthService';
+import randomatic from 'randomatic';
 const gamesRef = firestore().collection('Games');
 const usersRef = firestore().collection('Users');
 
@@ -15,6 +16,7 @@ export const createGameObject = name => {
     creator: userId,
     count: 0,
     creation_date: firestore.FieldValue.serverTimestamp(),
+    code: randomatic('A0', 6),
   };
 };
 
@@ -108,6 +110,23 @@ export default class GameService {
         return resolve(BUTTON_RESPONSE.ERROR);
       }
     });
+
+  static findGameFromCode = code =>
+    new Promise(resolve => {
+      gamesRef
+        .where('code', '==', code)
+        .where('status', '==', GAME_STATUS.ACTIVE)
+        .get()
+        .then(docs => {
+          const game = data.getDataFromFirebaseDoc(docs.docs[0]);
+          resolve(game);
+        })
+        .catch(e => {
+          console.log(e);
+          resolve(false);
+        });
+    });
+
   static joinGame = gameId =>
     new Promise(async resolve => {
       const userId = AuthService.getOwnUid();
