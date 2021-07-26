@@ -9,6 +9,7 @@ import CustomButton from '../../small/CustomButton';
 import {ScrollView, View} from 'react-native';
 import variables from '../../../util/variables';
 import LOGGED_IN_NAVIGATION from '../../../data/enums/LoggedInNavigation';
+import data from '../../../data';
 
 function Profile({navigation}) {
   const [loading, setLoading] = useState(false);
@@ -54,7 +55,16 @@ function Profile({navigation}) {
         <H3>Hello, {user?.name}</H3>
         <ScrollView style={{flex: 1}}>
           <View style={{paddingTop: variables.padding, alignItems: 'center'}}>
-            <H4>You have clicked {user.clicks} times</H4>
+            <H4>You have clicked {user.clicks} times!</H4>
+          </View>
+          <View style={{paddingTop: variables.padding, alignItems: 'center'}}>
+            <H4>
+              You have clicked #{data.getMostClicksForUser(user)} the most
+              times!
+            </H4>
+          </View>
+          <View style={{paddingTop: variables.padding, alignItems: 'center'}}>
+            <H4>You have won {user.gamesWon || 0} times</H4>
           </View>
           <View style={{paddingTop: variables.padding}}>
             <CustomInput value={username} onChangeText={e => setUsername(e)} />
