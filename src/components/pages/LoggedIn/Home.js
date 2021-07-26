@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {ScrollView, TouchableOpacity, View} from 'react-native';
 import LOGGED_IN_NAVIGATION from '../../../data/enums/LoggedInNavigation';
 import AuthService from '../../../services/AuthService';
@@ -7,7 +7,12 @@ import CustomButton from '../../small/CustomButton';
 import H2 from '../../text/H2';
 import H3 from '../../text/H3';
 import SettingsIcon from '../../../assets/icons/settings.svg';
-function Home({navigation}) {
+function Home({navigation, route}) {
+  useEffect(() => {
+    const {firstLogin} = route.params;
+    if (firstLogin) navigation.navigate(LOGGED_IN_NAVIGATION.GET_STARTED_ONE);
+  }, []);
+
   return (
     <View style={{flex: 1}}>
       <View
@@ -76,14 +81,6 @@ function Home({navigation}) {
               </TouchableOpacity>
             </View>
           </ScrollView>
-        </View>
-        <View style={{marginVertical: variables.getSize(15)}}>
-          {/* <CustomButton
-            onPress={() => {
-              AuthService.logout();
-            }}>
-            Logout
-          </CustomButton> */}
         </View>
       </View>
     </View>

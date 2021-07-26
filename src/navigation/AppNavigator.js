@@ -15,6 +15,7 @@ import InGame from '../components/pages/LoggedIn/InGame';
 import Profile from '../components/pages/LoggedIn/Profile';
 import UpdatePassword from '../components/pages/LoggedIn/UpdatePassword';
 import Scoreboard from '../components/pages/LoggedIn/Scoreboard';
+import GetStartedOne from '../components/pages/LoggedIn/GetStarted/GetStartedOne';
 
 const MyTheme = {
   ...DefaultTheme,
@@ -40,12 +41,16 @@ const AuthNavigation = () => (
   </NavigationContainer>
 );
 
-const LoggedInNavigation = () => (
+const LoggedInNavigation = ({firstLogin}) => (
   <NavigationContainer theme={MyTheme}>
     <LoggedInNav.Navigator
       initialRouteName={LOGGED_IN_NAVIGATION.HOME}
       headerMode="none">
-      <LoggedInNav.Screen name={LOGGED_IN_NAVIGATION.HOME} component={Home} />
+      <LoggedInNav.Screen
+        name={LOGGED_IN_NAVIGATION.HOME}
+        component={Home}
+        initialParams={{firstLogin}}
+      />
       <LoggedInNav.Screen
         name={LOGGED_IN_NAVIGATION.SEARCH_GAMES}
         component={SearchGames}
@@ -70,6 +75,14 @@ const LoggedInNavigation = () => (
         name={LOGGED_IN_NAVIGATION.SCOREBOARD}
         component={Scoreboard}
       />
+      <LoggedInNav.Screen
+        name={LOGGED_IN_NAVIGATION.GET_STARTED_ONE}
+        component={GetStartedOne}
+      />
+      <LoggedInNav.Screen
+        name={LOGGED_IN_NAVIGATION.GET_STARTED_TWO}
+        component={GetStartedOne}
+      />
     </LoggedInNav.Navigator>
   </NavigationContainer>
 );
@@ -77,20 +90,28 @@ const LoggedInNavigation = () => (
 function AppNavigator() {
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState(undefined);
-
-  function onAuthStateChanged(user) {
-    setUser(user);
-    if (initializing) setInitializing(false);
-  }
+  const [firstLogin, setFirstLogin] = useState(false);
 
   useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    const subscriber = auth().onAuthStateChanged(user => {
+      if (user) {
+        const metadata = user.metadata;
+        if (metadata.creationTime == metadata.lastSignInTime)
+          setFirstLogin(true);
+      }
+      setUser(user);
+      if (initializing) setInitializing(false);
+    });
     return subscriber;
   }, []);
 
   if (initializing) return null;
 
-  return !user ? <AuthNavigation /> : <LoggedInNavigation />;
+  return !user ? (
+    <AuthNavigation />
+  ) : (
+    <LoggedInNavigation firstLogin={firstLogin} />
+  );
 }
 
 export default AppNavigator;
