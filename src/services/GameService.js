@@ -51,36 +51,62 @@ export default class GameService {
 
   // static listenToGame = gameId => gamesRef.doc(gameId).onSnapshot;
   static buttonClick = gameId =>
-    new Promise((resolve, reject) => {
+    new Promise(async (resolve, reject) => {
       const userId = AuthService.getOwnUid();
-      const userDoc = usersRef.doc(userId);
-      gamesRef
-        .doc(gameId)
-        .get()
-        .then(doc => {
-          const gameData = doc.data();
-          if (gameData.count < 99) {
-            /** Handle Normal Click */
-            doc.ref.update({count: firestore.FieldValue.increment(1)});
-            userDoc.update({clicks: firestore.FieldValue.increment(1)});
-            resolve(BUTTON_RESPONSE.ADDED);
-          } else if (gameData.count == 99) {
-            /** Handle Win */
-            doc.ref.update({
-              count: firestore.FieldValue.increment(1),
-              winner: userId,
-              status: GAME_STATUS.COMPLETED,
-            });
-            userDoc.update({
-              gamesWon: firestore.FieldValue.increment(1),
-              clicks: firestore.FieldValue.increment(1),
-            });
-            resolve(BUTTON_RESPONSE.GAME_WIN);
+      const userDocRef = usersRef.doc(userId);
+      try {
+        const userDoc = await usersRef.doc(userId).get();
+        const userData = userDoc.data();
+        const gameDoc = await gamesRef.doc(gameId).get();
+        const gameData = gameDoc.data();
+        const clickNumber = gameData.count + 1;
+        if (clickNumber < 100) {
+          /**Handle Regular Click */
+          const userUpdateObj = {
+            clicks: firestore.FieldValue.increment(1),
+          };
+          if (userData.clickMap) {
+            if (typeof userData.clickMap[clickNumber] == 'number')
+              userUpdateObj[`clickMap.${clickNumber}`] =
+                firestore.FieldValue.increment(1);
+            else userUpdateObj[`clickMap.${clickNumber}`] = 1;
           } else {
-            /** Handle Game Completed Already */
-            resolve(BUTTON_RESPONSE.TOO_LATE);
+            userUpdateObj.clickMap = {};
+            userUpdateObj.clickMap[`${clickNumber}`] = 1;
           }
-        });
+          gameDoc.ref.update({count: firestore.FieldValue.increment(1)});
+          userDocRef.update(userUpdateObj);
+          return resolve(BUTTON_RESPONSE.ADDED);
+        } else if (clickNumber == 100) {
+          /** Handle Win */
+          const userUpdateObj = {
+            clicks: firestore.FieldValue.increment(1),
+            gamesWon: firestore.FieldValue.increment(1),
+          };
+          if (userData.clickMap) {
+            if (typeof userData.clickMap[clickNumber] == 'number')
+              userUpdateObj[`clickMap.${clickNumber}`] =
+                firestore.FieldValue.increment(1);
+            else userUpdateObj[`clickMap.${clickNumber}`] = 1;
+          } else {
+            userUpdateObj.clickMap = {};
+            userUpdateObj.clickMap[`${clickNumber}`] = 1;
+          }
+          gameDoc.ref.update({
+            count: firestore.FieldValue.increment(1),
+            winner: userId,
+            status: GAME_STATUS.COMPLETED,
+          });
+          userDocRef.update(userUpdateObj);
+          return resolve(BUTTON_RESPONSE.GAME_WIN);
+        } else if (clickNumber > 100) {
+          /** Handle Too Late */
+          return resolve(BUTTON_RESPONSE.TOO_LATE);
+        }
+      } catch (e) {
+        console.error(e);
+        return resolve(BUTTON_RESPONSE.ERROR);
+      }
     });
   static joinGame = gameId =>
     new Promise(async resolve => {
