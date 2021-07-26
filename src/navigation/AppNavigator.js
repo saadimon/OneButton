@@ -98,11 +98,6 @@ function AppNavigator() {
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(user => {
-      if (user) {
-        const metadata = user.metadata;
-        if (metadata.creationTime == metadata.lastSignInTime)
-          setFirstLogin(true);
-      }
       setUser(user);
       if (initializing) setInitializing(false);
     });
