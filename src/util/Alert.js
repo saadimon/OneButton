@@ -1,17 +1,42 @@
 import ALERT_TYPES from '../data/enums/AlertTypes';
+import RNToast from 'react-native-toast-message';
+
+// const basicConfig = {
+//   position: 'bottom',
+//   visibilityTime: 2000,
+//   // autoHide: true,
+//   bottomOffset: 50,
+// };
 
 const Alert = (type, message) => {
   switch (type) {
     case ALERT_TYPES.ERROR:
-      alert('error: ' + message);
+      RNToast.show({
+        type: 'error',
+        text1: 'Error!',
+        text2: message,
+      });
       break;
     case ALERT_TYPES.WARNING:
-      alert('warning: ' + message);
+      RNToast.show({
+        type: 'info',
+        text1: 'Warning!',
+        text2: message,
+      });
       break;
     case ALERT_TYPES.SUCCESS:
-      alert('success: ' + message);
+      RNToast.show({
+        type: 'success',
+        text1: 'Success!',
+        text2: message,
+      });
+      break;
     case ALERT_TYPES.INFO:
-      alert('Info: ' + message);
+      RNToast.show({
+        type: 'info',
+        text1: 'Info!',
+        text2: message,
+      });
       break;
     default:
       alert(message);

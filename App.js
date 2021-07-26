@@ -1,9 +1,9 @@
 import React from 'react';
 import type {Node} from 'react';
 import {SafeAreaView, StatusBar, View} from 'react-native';
-import Landing from './src/components/pages/Auth/Landing';
 import AppNavigator from './src/navigation/AppNavigator';
 import variables from './src/util/variables';
+import Toast from './src/components/small/Toast';
 
 const App: () => Node = () => {
   const backgroundStyle = {
@@ -12,13 +12,16 @@ const App: () => Node = () => {
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        backgroundColor={variables.colorWhite}
-        barStyle={'dark-content'}
-      />
-      <AppNavigator />
-    </SafeAreaView>
+    <>
+      <SafeAreaView style={backgroundStyle}>
+        <StatusBar
+          backgroundColor={variables.colorWhite}
+          barStyle={'dark-content'}
+        />
+        <AppNavigator />
+      </SafeAreaView>
+      <Toast />
+    </>
   );
 };
 
