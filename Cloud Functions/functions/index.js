@@ -1,14 +1,21 @@
 const functions = require('firebase-functions');
-
 const admin = require('firebase-admin');
 admin.initializeApp();
-
 const firestore = admin.firestore;
-
 const usersRef = firestore().collection('Users');
 const gamesRef = firestore().collection('Games');
-import BUTTON_RESPONSE from '../../src/data/enums/ButtonResponse';
-import GAME_STATUS from '../../src/data/enums/GameStatus';
+
+const BUTTON_RESPONSE = {
+  ADDED: 'added',
+  GAME_WIN: 'win',
+  TOO_LATE: 'game ended',
+  ERROR: 'error',
+};
+
+const GAME_STATUS = {
+  ACTIVE: 'active',
+  COMPLETED: 'completed',
+};
 
 exports.buttonClick = functions.https.onRequest(async (req, res) => {
   const {userId, gameId} = req.body;
