@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "493480580884",
-    "project_id": "onebutton-9feac",
-    "storage_bucket": "onebutton-9feac.appspot.com"
+    "project_number": "1147393201",
+    "project_id": "onebutton-ae926",
+    "storage_bucket": "onebutton-ae926.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:493480580884:android:120f97ee34d68e5037d401",
+        "mobilesdk_app_id": "1:1147393201:android:dd21fd17f141e774863e90",
         "android_client_info": {
           "package_name": "com.onebutton"
         }
       },
       "oauth_client": [
         {
-          "client_id": "493480580884-o2nqdm2t29tso5ic1nct3noludjejan2.apps.googleusercontent.com",
+          "client_id": "1147393201-g1iqo1u7qf2qdhtrrua5e3guc22ghmhs.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAZq24k3RI2XDhw1phCisbgOWnMRj3RTiU"
+          "current_key": "AIzaSyBZQM0TXyNtMquU_IJjEbxcIFexCg50gYk"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "493480580884-o2nqdm2t29tso5ic1nct3noludjejan2.apps.googleusercontent.com",
+              "client_id": "1147393201-g1iqo1u7qf2qdhtrrua5e3guc22ghmhs.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

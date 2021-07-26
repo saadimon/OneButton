@@ -4,6 +4,7 @@ import BUTTON_RESPONSE from '../data/enums/ButtonResponse';
 import GAME_STATUS from '../data/enums/GameStatus';
 import AuthService from './AuthService';
 import randomatic from 'randomatic';
+import {http} from '../util/http';
 const gamesRef = firestore().collection('Games');
 const usersRef = firestore().collection('Users');
 
@@ -55,56 +56,9 @@ export default class GameService {
   static buttonClick = gameId =>
     new Promise(async (resolve, reject) => {
       const userId = AuthService.getOwnUid();
-      const userDocRef = usersRef.doc(userId);
       try {
-        const userDoc = await usersRef.doc(userId).get();
-        const userData = userDoc.data();
-        const gameDoc = await gamesRef.doc(gameId).get();
-        const gameData = gameDoc.data();
-        const clickNumber = gameData.count + 1;
-        if (clickNumber < 100) {
-          /**Handle Regular Click */
-          const userUpdateObj = {
-            clicks: firestore.FieldValue.increment(1),
-          };
-          if (userData.clickMap) {
-            if (typeof userData.clickMap[clickNumber] == 'number')
-              userUpdateObj[`clickMap.${clickNumber}`] =
-                firestore.FieldValue.increment(1);
-            else userUpdateObj[`clickMap.${clickNumber}`] = 1;
-          } else {
-            userUpdateObj.clickMap = {};
-            userUpdateObj.clickMap[`${clickNumber}`] = 1;
-          }
-          gameDoc.ref.update({count: firestore.FieldValue.increment(1)});
-          userDocRef.update(userUpdateObj);
-          return resolve(BUTTON_RESPONSE.ADDED);
-        } else if (clickNumber == 100) {
-          /** Handle Win */
-          const userUpdateObj = {
-            clicks: firestore.FieldValue.increment(1),
-            gamesWon: firestore.FieldValue.increment(1),
-          };
-          if (userData.clickMap) {
-            if (typeof userData.clickMap[clickNumber] == 'number')
-              userUpdateObj[`clickMap.${clickNumber}`] =
-                firestore.FieldValue.increment(1);
-            else userUpdateObj[`clickMap.${clickNumber}`] = 1;
-          } else {
-            userUpdateObj.clickMap = {};
-            userUpdateObj.clickMap[`${clickNumber}`] = 1;
-          }
-          gameDoc.ref.update({
-            count: firestore.FieldValue.increment(1),
-            winner: userId,
-            status: GAME_STATUS.COMPLETED,
-          });
-          userDocRef.update(userUpdateObj);
-          return resolve(BUTTON_RESPONSE.GAME_WIN);
-        } else if (clickNumber > 100) {
-          /** Handle Too Late */
-          return resolve(BUTTON_RESPONSE.TOO_LATE);
-        }
+        const res = await http.post('buttonClick', {gameId, userId});
+        return resolve(res.data);
       } catch (e) {
         console.error(e);
         return resolve(BUTTON_RESPONSE.ERROR);
