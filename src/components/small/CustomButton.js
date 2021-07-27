@@ -22,6 +22,7 @@ function CustomButton({
   filled,
   bottomShadow,
   disabled,
+  noHPadding,
   ...props
 }) {
   return (
@@ -32,7 +33,7 @@ function CustomButton({
       {...props}>
       <View
         style={{
-          paddingHorizontal: variables.getSize(85),
+          paddingHorizontal: noHPadding ? 0 : variables.getSize(85),
           paddingVertical: variables.getSize(15),
           borderRadius: variables.getSize(40),
           alignItems: 'center',

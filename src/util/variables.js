@@ -18,11 +18,13 @@ const variables = {
   colorPurpleDark: 'rgba(61, 0, 138, 1)',
   colorPurpleDark2: '#2A005F',
   colorCard: 'rgba(242, 242, 242, 1)',
+  colorBackgroundDarken: '#00000033',
 
   /** Styling */
   padding: getSize(12),
   paddingLarge: getSize(30),
   marginHorizontalAuthPages: getSize(35),
+  modalViewWidth: '70%',
 };
 
 export default variables;

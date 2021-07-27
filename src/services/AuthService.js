@@ -1,7 +1,7 @@
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import data from '../data';
-
+import storage from '@react-native-firebase/storage';
 const usersCollection = firestore().collection('Users');
 
 const createUserInDB = (uid, email, username) =>
@@ -37,18 +37,39 @@ export default class AuthService {
         });
     });
 
-  static updateOwnUser = ({name}) =>
+  static updateUser = ({name, profilePicture}) =>
     new Promise(resolve => {
       const updateObj = {};
       if (name) {
         updateObj.name = name;
         updateObj.username = name;
       }
+      if (profilePicture) {
+        updateObj.profilePicture = profilePicture;
+      }
       usersCollection
         .doc(AuthService.getOwnUid())
         .update(updateObj)
         .then(() => resolve(true))
         .catch(e => resolve(false));
+    });
+
+  static updateProfilePicture = profilePicture =>
+    new Promise(resolve => {
+      const path = `ProfileImages/${this.getOwnUid()}`;
+      storage()
+        .ref(path)
+        .putFile(profilePicture)
+        .then(() => storage().ref(path).getDownloadURL())
+        .then(async url => {
+          const res = await this.updateUser({profilePicture: url});
+          if (res) return resolve(url);
+          else resolve(false);
+        })
+        .catch(e => {
+          console.log(e);
+          resolve(false);
+        });
     });
 
   static login(email, password) {

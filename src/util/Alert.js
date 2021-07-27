@@ -14,7 +14,7 @@ const Alert = (type, message) => {
       RNToast.show({
         type: 'error',
         text1: 'Error!',
-        text2: message,
+        text2: message || 'Something went wrong',
       });
       break;
     case ALERT_TYPES.WARNING:

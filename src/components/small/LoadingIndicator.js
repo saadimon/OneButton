@@ -18,7 +18,9 @@ function LoadingIndicator({
             position: 'absolute',
             width: dimensions.width,
             height: dimensions.height,
-            backgroundColor: darken ? '#00000033' : 'transparent',
+            backgroundColor: darken
+              ? variables.colorBackgroundDarken
+              : 'transparent',
             alignItems: 'center',
             zIndex: 999,
             justifyContent: 'center',
