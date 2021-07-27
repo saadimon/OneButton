@@ -6,8 +6,8 @@ import H3 from '../../../text/H3';
 import ChevronRight from '../../../../assets/icons/ChevronRight.svg';
 import AUTH_NAVIGATION from '../../../../data/enums/AuthNavigation';
 
-function GetStartedOne({navigation}) {
-  const goNext = () => navigation.navigate(AUTH_NAVIGATION.GET_STARTED_TWO);
+function GetStartedTwo({navigation}) {
+  const goHome = () => navigation.navigate(AUTH_NAVIGATION.LANDING);
   return (
     <View
       style={{
@@ -47,14 +47,14 @@ function GetStartedOne({navigation}) {
           marginVertical: variables.getSize(40),
           alignItems: 'flex-end',
         }}>
-        <TouchableOpacity onPress={goNext}>
+        <TouchableOpacity onPress={goHome}>
           <View
             style={{
               flexDirection: 'row',
               alignItems: 'center',
               marginRight: variables.getSize(45),
             }}>
-            <H3>Next</H3>
+            <H3>Start</H3>
             <View
               style={{
                 backgroundColor: '#c4c4c4',
@@ -74,4 +74,4 @@ function GetStartedOne({navigation}) {
   );
 }
 
-export default GetStartedOne;
+export default GetStartedTwo;

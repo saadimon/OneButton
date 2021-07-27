@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {View} from 'react-native';
 import Logo from '../../../assets/icons/logo.svg';
 import H1 from '../../text/H1';
@@ -6,7 +6,18 @@ import H4 from '../../text/H4';
 import CustomButton from '../../small/CustomButton';
 import AUTH_NAVIGATION from '../../../data/enums/AuthNavigation';
 import ScrollViewWithoutBar from '../../small/ScrollViewWithoutBar';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 function Landing({navigation, ...props}) {
+  useEffect(() => {
+    AsyncStorage.getItem('previouslyOpened').then(previouslyOpened => {
+      if (!previouslyOpened) {
+        navigation.navigate(AUTH_NAVIGATION.GET_STARTED_ONE);
+        AsyncStorage.setItem('previouslyOpened', true);
+      }
+    });
+  }, []);
+
   return (
     <ScrollViewWithoutBar style={{flex: 1, paddingHorizontal: 50}}>
       <View style={{marginTop: 110, marginBottom: 50, alignItems: 'center'}}>

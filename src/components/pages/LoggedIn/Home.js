@@ -8,11 +8,6 @@ import H2 from '../../text/H2';
 import H3 from '../../text/H3';
 import SettingsIcon from '../../../assets/icons/settings.svg';
 function Home({navigation, route}) {
-  useEffect(() => {
-    const {firstLogin} = route.params;
-    if (firstLogin) navigation.navigate(LOGGED_IN_NAVIGATION.GET_STARTED_ONE);
-  }, []);
-
   return (
     <View style={{flex: 1}}>
       <View

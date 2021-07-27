@@ -6,8 +6,6 @@ const LOGGED_IN_NAVIGATION = {
   PROFILE: 'profile',
   CHANGE_PASSWORD: 'change password',
   SCOREBOARD: 'scoreboard',
-  GET_STARTED_ONE: 'get started 1',
-  GET_STARTED_TWO: 'get started 2',
 };
 
 export default LOGGED_IN_NAVIGATION;

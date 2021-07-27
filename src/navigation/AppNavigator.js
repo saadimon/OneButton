@@ -16,6 +16,7 @@ import Profile from '../components/pages/LoggedIn/Profile';
 import UpdatePassword from '../components/pages/LoggedIn/UpdatePassword';
 import Scoreboard from '../components/pages/LoggedIn/Scoreboard';
 import GetStartedOne from '../components/pages/LoggedIn/GetStarted/GetStartedOne';
+import GetStartedTwo from '../components/pages/LoggedIn/GetStarted/GetStartedTwo';
 
 const MyTheme = {
   ...DefaultTheme,
@@ -29,32 +30,32 @@ const MyTheme = {
 const AuthNav = createStackNavigator();
 const LoggedInNav = createStackNavigator();
 
-const AuthNavigation = ({setFirstLogin}) => (
+const AuthNavigation = () => (
   <NavigationContainer theme={MyTheme}>
     <AuthNav.Navigator
       initialRouteName={AUTH_NAVIGATION.LANDING}
       headerMode="none">
       <AuthNav.Screen name={AUTH_NAVIGATION.LANDING} component={Landing} />
-      <AuthNav.Screen
-        name={AUTH_NAVIGATION.SIGN_UP}
-        initialParams={{setFirstLogin}}
-        component={Signup}
-      />
+      <AuthNav.Screen name={AUTH_NAVIGATION.SIGN_UP} component={Signup} />
       <AuthNav.Screen name={AUTH_NAVIGATION.LOG_IN} component={Login} />
+      <AuthNav.Screen
+        name={AUTH_NAVIGATION.GET_STARTED_ONE}
+        component={GetStartedOne}
+      />
+      <AuthNav.Screen
+        name={AUTH_NAVIGATION.GET_STARTED_TWO}
+        component={GetStartedTwo}
+      />
     </AuthNav.Navigator>
   </NavigationContainer>
 );
 
-const LoggedInNavigation = ({firstLogin}) => (
+const LoggedInNavigation = () => (
   <NavigationContainer theme={MyTheme}>
     <LoggedInNav.Navigator
       initialRouteName={LOGGED_IN_NAVIGATION.HOME}
       headerMode="none">
-      <LoggedInNav.Screen
-        name={LOGGED_IN_NAVIGATION.HOME}
-        component={Home}
-        initialParams={{firstLogin}}
-      />
+      <LoggedInNav.Screen name={LOGGED_IN_NAVIGATION.HOME} component={Home} />
       <LoggedInNav.Screen
         name={LOGGED_IN_NAVIGATION.SEARCH_GAMES}
         component={SearchGames}
@@ -79,14 +80,6 @@ const LoggedInNavigation = ({firstLogin}) => (
         name={LOGGED_IN_NAVIGATION.SCOREBOARD}
         component={Scoreboard}
       />
-      <LoggedInNav.Screen
-        name={LOGGED_IN_NAVIGATION.GET_STARTED_ONE}
-        component={GetStartedOne}
-      />
-      <LoggedInNav.Screen
-        name={LOGGED_IN_NAVIGATION.GET_STARTED_TWO}
-        component={GetStartedOne}
-      />
     </LoggedInNav.Navigator>
   </NavigationContainer>
 );
@@ -94,7 +87,6 @@ const LoggedInNavigation = ({firstLogin}) => (
 function AppNavigator() {
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState(undefined);
-  const [firstLogin, setFirstLogin] = useState(false);
 
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(user => {
@@ -106,11 +98,7 @@ function AppNavigator() {
 
   if (initializing) return null;
 
-  return !user ? (
-    <AuthNavigation setFirstLogin={setFirstLogin} />
-  ) : (
-    <LoggedInNavigation firstLogin={firstLogin} />
-  );
+  return !user ? <AuthNavigation /> : <LoggedInNavigation />;
 }
 
 export default AppNavigator;
