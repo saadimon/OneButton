@@ -58,7 +58,7 @@ export default class GameService {
       const userId = AuthService.getOwnUid();
       try {
         const res = await http.post('buttonClick', {gameId, userId});
-        return resolve(res.data);
+        return resolve(res);
       } catch (e) {
         console.error(e);
         return resolve(BUTTON_RESPONSE.ERROR);
@@ -107,9 +107,10 @@ export default class GameService {
       const userId = AuthService.getOwnUid();
       try {
         const res = await http.post('createGame', {userId, gameName: name});
-        const gameId = res.data();
+        const gameId = res;
         resolve(gameId);
       } catch (e) {
+        console.log(e);
         resolve(false);
       }
     });

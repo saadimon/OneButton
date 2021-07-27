@@ -20,18 +20,15 @@ const GAME_STATUS = {
 
 const GameCountIncrementInterval = 10; //seconds
 
-const createGameObject = name => {
-  const userId = AuthService.getOwnUid();
-  return {
-    name,
-    players: [userId],
-    status: GAME_STATUS.ACTIVE,
-    creator: userId,
-    count: 0,
-    creation_date: firestore.FieldValue.serverTimestamp(),
-    code: randomatic('A0', 6),
-  };
-};
+const createGameObject = (name, userId) => ({
+  name,
+  players: [userId],
+  status: GAME_STATUS.ACTIVE,
+  creator: userId,
+  count: 0,
+  creation_date: firestore.FieldValue.serverTimestamp(),
+  code: randomatic('A0', 6),
+});
 
 exports.buttonClick = functions.https.onRequest(async (req, res) => {
   const {userId, gameId} = req.body;
@@ -162,7 +159,7 @@ exports.createGame = functions.https.onRequest(async (req, res) => {
   const {userId, gameName} = req.body;
   const userDoc = usersRef.doc(userId);
   try {
-    const transaction1 = await gamesRef.add(createGameObject(gameName));
+    const transaction1 = await gamesRef.add(createGameObject(gameName, userId));
     const gameId = transaction1.id;
     await userDoc.update({
       games: firestore.FieldValue.arrayUnion(gameId),
@@ -173,7 +170,7 @@ exports.createGame = functions.https.onRequest(async (req, res) => {
       const gameData = gameRef.data();
       if (gameData.count < 99) {
         gameRef.ref
-          .update({count: admin.firestore.FieldValue.increment(1)})
+          .update({count: firestore.FieldValue.increment(1)})
           .catch(e => console.error(e));
       } else {
         clearInterval(scoreAdder);
