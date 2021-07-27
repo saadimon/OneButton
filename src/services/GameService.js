@@ -105,16 +105,11 @@ export default class GameService {
   static createGame = name =>
     new Promise(async resolve => {
       const userId = AuthService.getOwnUid();
-      const userDoc = usersRef.doc(userId);
       try {
-        const transaction1 = await gamesRef.add(createGameObject(name));
-        const gameId = transaction1.id;
-        await userDoc.update({
-          games: firestore.FieldValue.arrayUnion(gameId),
-        });
-        resolve(transaction1.id);
+        const res = await http.post('createGame', {userId, gameName: name});
+        const gameId = res.data();
+        resolve(gameId);
       } catch (e) {
-        console.log(e);
         resolve(false);
       }
     });

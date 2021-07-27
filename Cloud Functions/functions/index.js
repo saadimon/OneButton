@@ -17,6 +17,21 @@ const GAME_STATUS = {
   COMPLETED: 'completed',
 };
 
+const GameCountIncrementInterval = 10; //seconds
+
+const createGameObject = name => {
+  const userId = AuthService.getOwnUid();
+  return {
+    name,
+    players: [userId],
+    status: GAME_STATUS.ACTIVE,
+    creator: userId,
+    count: 0,
+    creation_date: firestore.FieldValue.serverTimestamp(),
+    code: randomatic('A0', 6),
+  };
+};
+
 exports.buttonClick = functions.https.onRequest(async (req, res) => {
   const {userId, gameId} = req.body;
   if (!userId || !gameId) return res.status(400).send();
@@ -104,9 +119,7 @@ exports.resetDailyCounter = functions.pubsub
   .schedule('0 0 * * *')
   .timeZone('America/New_York')
   .onRun(() => {
-    admin
-      .firestore()
-      .collection('Users')
+    usersRef
       .get()
       .then(snapshot => {
         snapshot.forEach(doc =>
@@ -120,9 +133,7 @@ exports.resetWeeklyCounter = functions.pubsub
   .schedule('0 0 * * 1')
   .timeZone('America/New_York')
   .onRun(() => {
-    admin
-      .firestore()
-      .collection('Users')
+    usersRef
       .get()
       .then(snapshot => {
         snapshot.forEach(doc =>
@@ -136,9 +147,7 @@ exports.resetMonthlyCounter = functions.pubsub
   .schedule('0 0 * * 1')
   .timeZone('America/New_York')
   .onRun(() => {
-    admin
-      .firestore()
-      .collection('Users')
+    usersRef
       .get()
       .then(snapshot => {
         snapshot.forEach(doc =>
@@ -147,3 +156,32 @@ exports.resetMonthlyCounter = functions.pubsub
       })
       .catch(e => console.error(e));
   });
+
+exports.createGame = functions.https.onRequest(async (req, res) => {
+  const {userId, gameName} = req.body;
+  const userDoc = usersRef.doc(userId);
+  try {
+    const transaction1 = await gamesRef.add(createGameObject(gameName));
+    const gameId = transaction1.id;
+    await userDoc.update({
+      games: firestore.FieldValue.arrayUnion(gameId),
+    });
+
+    const scoreAdder = setInterval(async () => {
+      const gameRef = await transaction1.get();
+      const gameData = gameRef.data();
+      if (gameData.count < 99) {
+        gameRef.ref
+          .update({count: admin.firestore.FieldValue.increment(1)})
+          .catch(e => console.error(e));
+      } else {
+        clearInterval(scoreAdder);
+      }
+    }, GameCountIncrementInterval * 1000);
+
+    return res.status(200).send(transaction1.id);
+  } catch (e) {
+    console.error(e);
+    return res.status(500).send();
+  }
+});
