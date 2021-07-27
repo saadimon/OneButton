@@ -4,6 +4,7 @@ admin.initializeApp();
 const firestore = admin.firestore;
 const usersRef = firestore().collection('Users');
 const gamesRef = firestore().collection('Games');
+const randomatic = require('randomatic');
 
 const BUTTON_RESPONSE = {
   ADDED: 'added',
