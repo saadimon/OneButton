@@ -30,6 +30,18 @@ exports.buttonClick = functions.https.onRequest(async (req, res) => {
     if (clickNumber < 100) {
       /**Handle Regular Click */
       const userUpdateObj = {
+        weeklyClicks:
+          typeof userData.weeklyClicks == 'number'
+            ? firestore.FieldValue.increment(1)
+            : 1,
+        monthlyClicks:
+          typeof userData.monthlyClicks == 'number'
+            ? firestore.FieldValue.increment(1)
+            : 1,
+        dailyClicks:
+          typeof userData.dailyClicks == 'number'
+            ? firestore.FieldValue.increment(1)
+            : 1,
         clicks: firestore.FieldValue.increment(1),
       };
       if (userData.clickMap) {
@@ -47,6 +59,18 @@ exports.buttonClick = functions.https.onRequest(async (req, res) => {
     } else if (clickNumber == 100) {
       /** Handle Win */
       const userUpdateObj = {
+        weeklyClicks:
+          typeof userData.weeklyClicks == 'number'
+            ? firestore.FieldValue.increment(1)
+            : 1,
+        monthlyClicks:
+          typeof userData.monthlyClicks == 'number'
+            ? firestore.FieldValue.increment(1)
+            : 1,
+        dailyClicks:
+          typeof userData.dailyClicks == 'number'
+            ? firestore.FieldValue.increment(1)
+            : 1,
         clicks: firestore.FieldValue.increment(1),
         gamesWon: firestore.FieldValue.increment(1),
       };
@@ -75,3 +99,51 @@ exports.buttonClick = functions.https.onRequest(async (req, res) => {
     res.status(500).send(BUTTON_RESPONSE.ERROR);
   }
 });
+
+exports.resetDailyCounter = functions.pubsub
+  .schedule('0 0 * * *')
+  .timeZone('America/New_York')
+  .onRun(() => {
+    admin
+      .firestore()
+      .collection('Users')
+      .get()
+      .then(snapshot => {
+        snapshot.forEach(doc =>
+          doc.ref.update({dailyClicks: 0}).catch(e => console.error(e)),
+        );
+      })
+      .catch(e => console.error(e));
+  });
+
+exports.resetWeeklyCounter = functions.pubsub
+  .schedule('0 0 * * 1')
+  .timeZone('America/New_York')
+  .onRun(() => {
+    admin
+      .firestore()
+      .collection('Users')
+      .get()
+      .then(snapshot => {
+        snapshot.forEach(doc =>
+          doc.ref.update({weeklyClicks: 0}).catch(e => console.error(e)),
+        );
+      })
+      .catch(e => console.error(e));
+  });
+
+exports.resetMonthlyCounter = functions.pubsub
+  .schedule('0 0 * * 1')
+  .timeZone('America/New_York')
+  .onRun(() => {
+    admin
+      .firestore()
+      .collection('Users')
+      .get()
+      .then(snapshot => {
+        snapshot.forEach(doc =>
+          doc.ref.update({monthlyClicks: 0}).catch(e => console.error(e)),
+        );
+      })
+      .catch(e => console.error(e));
+  });

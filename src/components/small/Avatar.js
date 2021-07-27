@@ -5,7 +5,7 @@ import profilePicture from '../../assets/images/profilePicture.png';
 
 function Avatar({source, onPress, size = variables.getSize(150)}) {
   return (
-    <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity onPress={onPress ? onPress : undefined}>
       <Image
         width={size}
         height={size}
