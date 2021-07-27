@@ -115,11 +115,44 @@ export default class GameService {
       }
     });
 
-  static getHighScores = (prevDoc, limit = 10) =>
+  static getAllTimeHighScores = (prevDoc, limit = 10) =>
     new Promise(resolve => {
       usersRef
         .orderBy('gamesWon', 'desc')
-        .limit(10)
+        .limit(limit)
+        // .startAfter(prevDoc)
+        .get()
+        .then(docs => resolve(data.getListOfDocsFromFirebaseQuery(docs)))
+        .catch(e => resolve([]));
+    });
+
+  static getDailyHighScores = (prevDoc, limit = 10) =>
+    new Promise(resolve => {
+      usersRef
+        .orderBy('gamesWon', 'desc')
+        .limit(limit)
+        // .startAfter(prevDoc)
+        .get()
+        .then(docs => resolve(data.getListOfDocsFromFirebaseQuery(docs)))
+        .catch(e => resolve([]));
+    });
+
+  static getWeeklyHighScores = (prevDoc, limit = 10) =>
+    new Promise(resolve => {
+      usersRef
+        .orderBy('gamesWon', 'desc')
+        .limit(limit)
+        // .startAfter(prevDoc)
+        .get()
+        .then(docs => resolve(data.getListOfDocsFromFirebaseQuery(docs)))
+        .catch(e => resolve([]));
+    });
+
+  static getMonthlyHighScores = (prevDoc, limit = 10) =>
+    new Promise(resolve => {
+      usersRef
+        .orderBy('gamesWon', 'desc')
+        .limit(limit)
         // .startAfter(prevDoc)
         .get()
         .then(docs => resolve(data.getListOfDocsFromFirebaseQuery(docs)))

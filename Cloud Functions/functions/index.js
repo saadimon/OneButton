@@ -84,6 +84,18 @@ exports.buttonClick = functions.https.onRequest(async (req, res) => {
           typeof userData.dailyClicks == 'number'
             ? firestore.FieldValue.increment(1)
             : 1,
+        weeklyWins:
+          typeof userData.weeklyWins == 'number'
+            ? firestore.FieldValue.increment(1)
+            : 1,
+        monthlyWins:
+          typeof userData.monthlyWins == 'number'
+            ? firestore.FieldValue.increment(1)
+            : 1,
+        dailyWins:
+          typeof userData.dailyWins == 'number'
+            ? firestore.FieldValue.increment(1)
+            : 1,
         clicks: firestore.FieldValue.increment(1),
         gamesWon: firestore.FieldValue.increment(1),
       };
@@ -121,7 +133,9 @@ exports.resetDailyCounter = functions.pubsub
       .get()
       .then(snapshot => {
         snapshot.forEach(doc =>
-          doc.ref.update({dailyClicks: 0}).catch(e => console.error(e)),
+          doc.ref
+            .update({dailyClicks: 0, dailyWins: 0})
+            .catch(e => console.error(e)),
         );
       })
       .catch(e => console.error(e));
@@ -135,7 +149,9 @@ exports.resetWeeklyCounter = functions.pubsub
       .get()
       .then(snapshot => {
         snapshot.forEach(doc =>
-          doc.ref.update({weeklyClicks: 0}).catch(e => console.error(e)),
+          doc.ref
+            .update({weeklyClicks: 0, weeklyWins: 0})
+            .catch(e => console.error(e)),
         );
       })
       .catch(e => console.error(e));
@@ -149,7 +165,9 @@ exports.resetMonthlyCounter = functions.pubsub
       .get()
       .then(snapshot => {
         snapshot.forEach(doc =>
-          doc.ref.update({monthlyClicks: 0}).catch(e => console.error(e)),
+          doc.ref
+            .update({monthlyClicks: 0, monthlyWins: 0})
+            .catch(e => console.error(e)),
         );
       })
       .catch(e => console.error(e));

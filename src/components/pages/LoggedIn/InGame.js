@@ -14,6 +14,7 @@ import H4 from '../../text/H4';
 import clipboard from '@react-native-community/clipboard';
 import ClipboardIcon from '../../../assets/icons/Clipboard';
 import ComponentLoadingIndicator from '../../small/ComponentLoadingIndicator';
+import AuthService from '../../../services/AuthService';
 
 function InGame({navigation, route}) {
   const gameId = route.params.gameId;
@@ -33,6 +34,7 @@ function InGame({navigation, route}) {
   }, []);
 
   const onButtonPress = async () => {
+    if (loading) return;
     if (game.count < 100) {
       setLoading(true);
       try {
@@ -74,7 +76,11 @@ function InGame({navigation, route}) {
               {game?.count < 100 ? (
                 game.count
               ) : game ? (
-                '🎉 You Win! 🎉'
+                game.winner == AuthService.getOwnUid() ? (
+                  '🎉 You Win! 🎉'
+                ) : (
+                  '😞 You were too late 😞'
+                )
               ) : (
                 <ComponentLoadingIndicator />
               )}
