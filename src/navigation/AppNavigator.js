@@ -14,7 +14,7 @@ import CreateGame from '../components/pages/LoggedIn/CreateGame';
 import InGame from '../components/pages/LoggedIn/InGame';
 import Profile from '../components/pages/LoggedIn/Profile';
 import UpdatePassword from '../components/pages/LoggedIn/UpdatePassword';
-import Scoreboard from '../components/pages/LoggedIn/Scoreboard';
+import Scoreboard from '../components/pages/LoggedIn/Scoreboard/Scoreboard';
 import GetStartedOne from '../components/pages/LoggedIn/GetStarted/GetStartedOne';
 import GetStartedTwo from '../components/pages/LoggedIn/GetStarted/GetStartedTwo';
 

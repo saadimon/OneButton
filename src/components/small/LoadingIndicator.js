@@ -1,9 +1,8 @@
 import React from 'react';
-import {ActivityIndicator, Dimensions, Modal, Text, View} from 'react-native';
+import {ActivityIndicator, Modal, View} from 'react-native';
 import variables from '../../util/variables';
 
 function LoadingIndicator({loading, size = 'large', darken = true, style}) {
-  const dimensions = Dimensions.get('screen');
   return (
     <Modal
       visible={loading}

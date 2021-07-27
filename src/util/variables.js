@@ -12,7 +12,7 @@ const variables = {
 
   /**Colors */
   colorPrimary: 'rgba(51, 0,255,1)',
-  colorWhite: 'rgba(255,255,255,1)',
+  colorWhite: '#ffffff',
   colorPurpleLight: 'rgba(166, 21, 189, 1)',
   colorPurpleMedium: 'rgba(85, 47, 134, 1)',
   colorPurpleDark: 'rgba(61, 0, 138, 1)',

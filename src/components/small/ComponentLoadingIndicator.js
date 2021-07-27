@@ -1,5 +1,5 @@
 import React from 'react';
-import {ActivityIndicator, Dimensions, Text, View} from 'react-native';
+import {ActivityIndicator, View} from 'react-native';
 import variables from '../../util/variables';
 
 function ComponentLoadingIndicator({
@@ -9,20 +9,20 @@ function ComponentLoadingIndicator({
   darken = true,
   style,
 }) {
-  const dimensions = Dimensions.get('screen');
   return (
     <View style={{flex: 1, ...style}}>
       {loading && (
         <View
           style={{
             position: 'absolute',
-            width: dimensions.width,
-            height: dimensions.height,
+            width: '100%',
+            height: '100%',
+            flex: 1,
             backgroundColor: darken
               ? variables.colorBackgroundDarken
               : 'transparent',
             alignItems: 'center',
-            zIndex: 999,
+            zIndex: 2,
             justifyContent: 'center',
           }}>
           <ActivityIndicator
