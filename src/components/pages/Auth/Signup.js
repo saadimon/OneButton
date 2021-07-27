@@ -50,7 +50,8 @@ function Signup({route}) {
   };
 
   return (
-    <LoadingIndicator loading={loading} style={{flex: 1}}>
+    <>
+      <LoadingIndicator loading={loading} style={{flex: 1}} />
       <View
         style={{
           flex: 1,
@@ -152,7 +153,7 @@ function Signup({route}) {
           </InfoText>
         </View>
       )}
-    </LoadingIndicator>
+    </>
   );
 }
 

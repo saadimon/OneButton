@@ -58,7 +58,8 @@ function SearchGames({navigation}) {
   };
 
   return (
-    <LoadingIndicator loading={loading}>
+    <>
+      <LoadingIndicator loading={loading} />
       <View
         style={{
           flex: 1,
@@ -135,7 +136,7 @@ function SearchGames({navigation}) {
           </ScrollView>
         </View>
       </View>
-    </LoadingIndicator>
+    </>
   );
 }
 

@@ -104,7 +104,8 @@ function Profile({navigation}) {
   };
 
   return (
-    <LoadingIndicator loading={loading}>
+    <>
+      <LoadingIndicator loading={loading} />
       <Modal
         visible={changePictureModalVisible}
         transparent={true}
@@ -193,7 +194,7 @@ function Profile({navigation}) {
           <CustomButton onPress={logout}>Logout</CustomButton>
         </View>
       </View>
-    </LoadingIndicator>
+    </>
   );
 }
 

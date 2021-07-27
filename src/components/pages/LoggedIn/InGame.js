@@ -13,6 +13,7 @@ import H3 from '../../text/H3';
 import H4 from '../../text/H4';
 import clipboard from '@react-native-community/clipboard';
 import ClipboardIcon from '../../../assets/icons/Clipboard';
+import ComponentLoadingIndicator from '../../small/ComponentLoadingIndicator';
 
 function InGame({navigation, route}) {
   const gameId = route.params.gameId;
@@ -58,7 +59,8 @@ function InGame({navigation, route}) {
   };
 
   return (
-    <LoadingIndicator loading={loading || !game}>
+    <>
+      <LoadingIndicator loading={loading || !game} />
       <View
         style={{
           flex: 1,
@@ -74,7 +76,7 @@ function InGame({navigation, route}) {
               ) : game ? (
                 '🎉 You Win! 🎉'
               ) : (
-                <LoadingIndicator />
+                <ComponentLoadingIndicator />
               )}
             </H2>
           </View>
@@ -110,7 +112,7 @@ function InGame({navigation, route}) {
           </View>
         </View>
       </View>
-    </LoadingIndicator>
+    </>
   );
 }
 

@@ -26,13 +26,15 @@ function Login() {
   };
 
   return (
-    <LoadingIndicator
-      loading={loading}
-      style={{
-        paddingHorizontal: variables.marginHorizontalAuthPages,
-        marginTop: variables.getSize(24),
-        flex: 1,
-      }}>
+    <>
+      <LoadingIndicator
+        loading={loading}
+        style={{
+          paddingHorizontal: variables.marginHorizontalAuthPages,
+          marginTop: variables.getSize(24),
+          flex: 1,
+        }}
+      />
       <H2>Login</H2>
       <ScrollViewWithoutBar>
         <View style={{marginTop: variables.getSize(60)}}>
@@ -76,7 +78,7 @@ function Login() {
           </View>
         </View>
       </ScrollViewWithoutBar>
-    </LoadingIndicator>
+    </>
   );
 }
 

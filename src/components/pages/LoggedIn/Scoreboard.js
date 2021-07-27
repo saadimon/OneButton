@@ -39,7 +39,8 @@ function Scoreboard() {
   }, []);
 
   return (
-    <LoadingIndicator loading={loading}>
+    <>
+      <LoadingIndicator loading={loading} />
       <View
         style={{
           flex: 1,
@@ -63,7 +64,7 @@ function Scoreboard() {
           ))}
         </ScrollView>
       </View>
-    </LoadingIndicator>
+    </>
   );
 }
 

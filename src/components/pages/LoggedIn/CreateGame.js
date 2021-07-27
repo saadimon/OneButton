@@ -28,7 +28,8 @@ function CreateGame({navigation}) {
   };
 
   return (
-    <LoadingIndicator loading={loading}>
+    <>
+      <LoadingIndicator loading={loading} />
       <View
         style={{
           flex: 1,
@@ -49,7 +50,7 @@ function CreateGame({navigation}) {
           </View>
         </ScrollView>
       </View>
-    </LoadingIndicator>
+    </>
   );
 }
 
