@@ -19,6 +19,7 @@ const variables = {
   colorPurpleDark2: '#2A005F',
   colorCard: 'rgba(242, 242, 242, 1)',
   colorBackgroundDarken: '#00000033',
+  colorBlack: '#000000',
 
   /** Styling */
   padding: getSize(12),

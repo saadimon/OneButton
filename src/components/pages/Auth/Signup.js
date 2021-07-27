@@ -38,12 +38,9 @@ function Signup({route}) {
   }, []);
 
   const onSignup = () => {
-    const {setFirstLogin} = route.params;
-    setFirstLogin(true);
     setLoading(true);
     AuthService.signup(email, password, userName)
       .catch(e => {
-        setFirstLogin(false);
         Alert(ALERT_TYPES.ERROR, e.code);
       })
       .finally(() => setLoading(false));

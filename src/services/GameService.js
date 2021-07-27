@@ -129,7 +129,7 @@ export default class GameService {
   static getDailyHighScores = (prevDoc, limit = 10) =>
     new Promise(resolve => {
       usersRef
-        .orderBy('gamesWon', 'desc')
+        .orderBy('dailyWins', 'desc')
         .limit(limit)
         // .startAfter(prevDoc)
         .get()
@@ -140,7 +140,7 @@ export default class GameService {
   static getWeeklyHighScores = (prevDoc, limit = 10) =>
     new Promise(resolve => {
       usersRef
-        .orderBy('gamesWon', 'desc')
+        .orderBy('weeklyWins', 'desc')
         .limit(limit)
         // .startAfter(prevDoc)
         .get()
@@ -151,7 +151,7 @@ export default class GameService {
   static getMonthlyHighScores = (prevDoc, limit = 10) =>
     new Promise(resolve => {
       usersRef
-        .orderBy('gamesWon', 'desc')
+        .orderBy('monthlyWins', 'desc')
         .limit(limit)
         // .startAfter(prevDoc)
         .get()

@@ -8,11 +8,12 @@ export const defaultH4Styles = {
   fontWeight: variables.fontWeight_normal,
 };
 
-function H4({children, style}) {
+function H4({children, light, style}) {
   return (
     <Text
       style={{
         ...defaultH4Styles,
+        color: light ? variables.colorWhite : variables.colorBlack,
         ...style,
       }}>
       {children}

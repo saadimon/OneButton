@@ -1,7 +1,7 @@
 import React from 'react';
 import {Text} from 'react-native';
 import variables from '../../util/variables';
-function H1({children, style}) {
+function H1({children, light, style}) {
   return (
     <Text
       style={{
@@ -12,6 +12,7 @@ function H1({children, style}) {
         textShadowOffset: {width: 0, height: 8},
         textShadowRadius: 18,
         letterSpacing: -4,
+        color: light ? variables.colorWhite : variables.colorBlack,
         ...style,
       }}>
       {children}
