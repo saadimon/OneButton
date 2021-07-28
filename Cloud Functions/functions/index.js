@@ -173,108 +173,6 @@ exports.resetMonthlyCounter = functions.pubsub
       .catch(e => console.error(e));
   });
 
-exports.addCounter00 = functions.pubsub
-  .schedule('0 * * * *')
-  .timeZone('America/New_York')
-  .onRun(() => {
-    gamesRef
-      .where('status', '==', GAME_STATUS.ACTIVE)
-      .where('count', '<', 99)
-      .where('players.count', '>', 1)
-      .get()
-      .then(docs => {
-        docs.forEach(doc =>
-          doc.ref.update({count: firestore.FieldValue.increment(1)}),
-        );
-      })
-      .catch(e => console.error(e));
-  });
-
-exports.addCounter10 = functions.pubsub
-  .schedule('10 * * * *')
-  .timeZone('America/New_York')
-  .onRun(() => {
-    gamesRef
-      .where('status', '==', GAME_STATUS.ACTIVE)
-      .where('count', '<', 99)
-      .where('players.count', '>', 1)
-      .get()
-      .then(docs => {
-        docs.forEach(doc =>
-          doc.ref.update({count: firestore.FieldValue.increment(1)}),
-        );
-      })
-      .catch(e => console.error(e));
-  });
-
-exports.addCounter20 = functions.pubsub
-  .schedule('20 * * * *')
-  .timeZone('America/New_York')
-  .onRun(() => {
-    gamesRef
-      .where('status', '==', GAME_STATUS.ACTIVE)
-      .where('count', '<', 99)
-      .where('players.count', '>', 1)
-      .get()
-      .then(docs => {
-        docs.forEach(doc =>
-          doc.ref.update({count: firestore.FieldValue.increment(1)}),
-        );
-      })
-      .catch(e => console.error(e));
-  });
-
-exports.addCounter30 = functions.pubsub
-  .schedule('30 * * * *')
-  .timeZone('America/New_York')
-  .onRun(() => {
-    gamesRef
-      .where('status', '==', GAME_STATUS.ACTIVE)
-      .where('count', '<', 99)
-      .where('players.count', '>', 1)
-      .get()
-      .then(docs => {
-        docs.forEach(doc =>
-          doc.ref.update({count: firestore.FieldValue.increment(1)}),
-        );
-      })
-      .catch(e => console.error(e));
-  });
-
-exports.addCounter40 = functions.pubsub
-  .schedule('40 * * * *')
-  .timeZone('America/New_York')
-  .onRun(() => {
-    gamesRef
-      .where('status', '==', GAME_STATUS.ACTIVE)
-      .where('count', '<', 99)
-      .where('players.count', '>', 1)
-      .get()
-      .then(docs => {
-        docs.forEach(doc =>
-          doc.ref.update({count: firestore.FieldValue.increment(1)}),
-        );
-      })
-      .catch(e => console.error(e));
-  });
-
-exports.addCounter50 = functions.pubsub
-  .schedule('50 * * * *')
-  .timeZone('America/New_York')
-  .onRun(() => {
-    gamesRef
-      .where('status', '==', GAME_STATUS.ACTIVE)
-      .where('count', '<', 99)
-      .where('players.count', '>', 1)
-      .get()
-      .then(docs => {
-        docs.forEach(doc =>
-          doc.ref.update({count: firestore.FieldValue.increment(1)}),
-        );
-      })
-      .catch(e => console.error(e));
-  });
-
 exports.createGame = functions.https.onRequest(async (req, res) => {
   const {userId, gameName} = req.body;
   const userDoc = usersRef.doc(userId);
@@ -285,17 +183,17 @@ exports.createGame = functions.https.onRequest(async (req, res) => {
       games: firestore.FieldValue.arrayUnion(gameId),
     });
 
-    // const scoreAdder = setInterval(async () => {
-    //   const gameRef = await transaction1.get();
-    //   const gameData = gameRef.data();
-    //   if (gameData.count < 99) {
-    //     gameRef.ref
-    //       .update({count: firestore.FieldValue.increment(1)})
-    //       .catch(e => console.error(e));
-    //   } else {
-    //     clearInterval(scoreAdder);
-    //   }
-    // }, GameCountIncrementInterval * 1000);
+    const scoreAdder = setInterval(async () => {
+      const gameRef = await transaction1.get();
+      const gameData = gameRef.data();
+      if (gameData.count < 99) {
+        gameRef.ref
+          .update({count: firestore.FieldValue.increment(1)})
+          .catch(e => console.error(e));
+      } else {
+        clearInterval(scoreAdder);
+      }
+    }, GameCountIncrementInterval * 1000);
 
     return res.status(200).send(transaction1.id);
   } catch (e) {
