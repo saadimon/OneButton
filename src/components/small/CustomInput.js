@@ -4,20 +4,22 @@ import variables from '../../util/variables';
 
 import {defaultH4Styles} from '../text/H4';
 
-function CustomInput({style, ...props}) {
+function CustomInput({style, light, ...props}) {
   return (
     <TextInput
       style={{
         borderWidth: 2,
-        borderColor: variables.colorPrimary,
+        borderColor: light ? variables.colorWhite : variables.colorPrimary,
         borderRadius: 100,
         paddingHorizontal: 25,
         paddingVertical: 15,
-        color: variables.colorPrimary,
+        color: light ? variables.colorWhite : variables.colorPrimary,
         ...defaultH4Styles,
         ...style,
       }}
-      placeholderTextColor={variables.colorPrimary}
+      placeholderTextColor={
+        light ? variables.colorWhite : variables.colorPrimary
+      }
       {...props}
     />
   );

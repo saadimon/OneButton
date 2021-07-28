@@ -22,6 +22,18 @@ export const createGameObject = name => {
 };
 
 export default class GameService {
+  static getGame = gameId =>
+    new Promise(resolve => {
+      gamesRef
+        .doc(gameId)
+        .get()
+        .then(doc => resolve(data.getDataFromFirebaseDoc(doc)))
+        .catch(e => {
+          console.log(e);
+          resolve(false);
+        });
+    });
+
   static getActiveGames = (limit = 10) =>
     new Promise(resolve => {
       gamesRef
@@ -69,7 +81,7 @@ export default class GameService {
     new Promise(resolve => {
       gamesRef
         .where('code', '==', code)
-        .where('status', '==', GAME_STATUS.ACTIVE)
+        // .where('status', '==', GAME_STATUS.ACTIVE)
         .get()
         .then(docs => {
           const game = data.getDataFromFirebaseDoc(docs.docs[0]);
@@ -84,7 +96,6 @@ export default class GameService {
   static joinGame = gameId =>
     new Promise(async resolve => {
       const userId = AuthService.getOwnUid();
-      console.log(AuthService.getOwnUid());
       const userDoc = usersRef.doc(userId);
       const transaction1 = gamesRef.doc(gameId).update({
         players: firestore.FieldValue.arrayUnion(AuthService.getOwnUid()),

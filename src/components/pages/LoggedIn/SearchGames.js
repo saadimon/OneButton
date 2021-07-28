@@ -15,19 +15,7 @@ import CustomButton from '../../small/CustomButton';
 
 function SearchGames({navigation}) {
   const [loading, setLoading] = useState(false);
-  const [games, setGames] = useState([]);
   const [gameCode, setGameCode] = useState('');
-
-  const getActiveGames = async () => {
-    setLoading(true);
-    const games = await GameService.getActiveGames();
-    setGames(games);
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    getActiveGames();
-  }, []);
 
   const onJoinGame = async game => {
     setLoading(true);
@@ -49,12 +37,13 @@ function SearchGames({navigation}) {
       GameService.findGameFromCode(gameCode)
         .then(game => {
           if (game) {
-            if (game.players.includes(AuthService.getOwnUid()))
+            if (game.players?.includes(AuthService.getOwnUid()))
               onEnterGame(game);
             else onJoinGame(game);
           } else Alert(ALERT_TYPES.ERROR, 'Game not found!');
         })
-        .finally(setGameCode(''));
+        .finally(() => setGameCode(''));
+    else Alert(ALERT_TYPES.ERROR, 'Invalid Code');
   };
 
   return (
@@ -64,77 +53,22 @@ function SearchGames({navigation}) {
         style={{
           flex: 1,
           paddingHorizontal: variables.marginHorizontalAuthPages,
+          paddingVertical: variables.marginHorizontalAuthPages,
+          backgroundColor: variables.colorPrimary,
+          justifyContent: 'space-between',
         }}>
-        <H2>Search Games</H2>
-        <View
-          style={{
-            flexDirection: 'row',
-            marginVertical: variables.getSize(15),
-            alignItems: 'center',
-          }}>
-          <CustomInput
-            value={gameCode}
-            onChangeText={e => setGameCode(e)}
-            style={{flex: 1, textAlign: 'center'}}
-            placeholder="Join by code"
-            caretHidden={true}
-          />
-          <CustomButton
-            onPress={onEnterCode}
-            filled
-            style={{
-              paddingHorizontal: 15,
-              justifyContent: 'center',
-            }}>
-            Join
-          </CustomButton>
-        </View>
-        <View style={{flex: 1}}>
-          <ScrollView
-            style={{
-              marginTop: variables.padding,
-            }}>
-            {games.map((game, index) => {
-              const joined = game.players.includes(AuthService.getOwnUid());
-              return (
-                <View
-                  style={{
-                    paddingVertical: variables.getSize(50),
-                    paddingHorizontal: variables.getSize(12),
-                    borderWidth: 2,
-                    borderRadius: 5,
-                    alignItems: 'center',
-                    marginBottom: variables.padding,
-                  }}
-                  key={index}>
-                  <View
-                    style={{
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                    }}>
-                    <View style={{flex: 1}}>
-                      <H3 style={{textAlign: 'center'}}>{game.name}</H3>
-                    </View>
-                    <TouchableOpacity
-                      onPress={e =>
-                        joined ? onEnterGame(game) : onJoinGame(game)
-                      }>
-                      <View
-                        style={{
-                          borderRadius: 5,
-                          borderWidth: 2,
-                          paddingHorizontal: variables.getSize(12),
-                          paddingVertical: variables.getSize(12),
-                        }}>
-                        <H4>{joined ? 'Enter' : 'Join Game'}</H4>
-                      </View>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              );
-            })}
-          </ScrollView>
-        </View>
+        <H2 light style={{textAlign: 'center'}}>
+          Join Game
+        </H2>
+        <CustomInput
+          light
+          caretHidden
+          style={{textAlign: 'center'}}
+          value={gameCode}
+          placeholder="Enter Code"
+          onChangeText={e => setGameCode(e)}
+        />
+        <CustomButton onPress={onEnterCode}>Join</CustomButton>
       </View>
     </>
   );
