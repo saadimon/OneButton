@@ -8,19 +8,6 @@ import {http} from '../util/http';
 const gamesRef = firestore().collection('Games');
 const usersRef = firestore().collection('Users');
 
-export const createGameObject = name => {
-  const userId = AuthService.getOwnUid();
-  return {
-    name,
-    players: [userId],
-    status: GAME_STATUS.ACTIVE,
-    creator: userId,
-    count: 0,
-    creation_date: firestore.FieldValue.serverTimestamp(),
-    code: randomatic('A0', 6),
-  };
-};
-
 export default class GameService {
   static getGame = gameId =>
     new Promise(resolve => {
@@ -119,6 +106,17 @@ export default class GameService {
       try {
         const res = await http.post('createGame', {userId, gameName: name});
         const gameId = res;
+        resolve(gameId);
+      } catch (e) {
+        console.log(e);
+        resolve(false);
+      }
+    });
+
+  static resetGame = gameId =>
+    new Promise(async resolve => {
+      try {
+        const res = await http.post('resetGame', {gameId});
         resolve(gameId);
       } catch (e) {
         console.log(e);

@@ -20,15 +20,37 @@ const GAME_STATUS = {
 
 const GameCountIncrementInterval = 10; //seconds
 
+const getDifferenceInTenSeconds = (date1, date2) => {
+  const diffInSec = Math.abs(
+    Math.floor(date2.getTime() / 1000) - date1.seconds,
+  );
+  return Math.floor(diffInSec / 10);
+};
+
 const createGameObject = (name, userId) => ({
   name,
   players: [userId],
   status: GAME_STATUS.ACTIVE,
   creator: userId,
   count: 0,
-  creation_date: firestore.FieldValue.serverTimestamp(),
+  // creation_date: firestore.FieldValue.serverTimestamp(),
   code: randomatic('A0', 6),
+  creationDate: new Date(),
 });
+
+const calculateScore = gameData => {
+  const {count, creationDate, status} = gameData;
+  const timeDiffInTenSec = getDifferenceInTenSeconds(creationDate, new Date());
+  let timeCount = Math.floor(timeDiffInTenSec);
+  const totalScore = count + timeCount;
+  if (totalScore > 99) {
+    if (status == GAME_STATUS.ACTIVE) {
+      return 99;
+    }
+    if (status == GAME_STATUS.COMPLETED) return 100;
+  }
+  return totalScore;
+};
 
 exports.buttonClick = functions.https.onRequest(async (req, res) => {
   const {userId, gameId} = req.body;
@@ -39,7 +61,8 @@ exports.buttonClick = functions.https.onRequest(async (req, res) => {
     const userData = userDoc.data();
     const gameDoc = await gamesRef.doc(gameId).get();
     const gameData = gameDoc.data();
-    const clickNumber = gameData.count + 1;
+    const totalScore = calculateScore(gameData);
+    const clickNumber = totalScore + 1;
     if (clickNumber < 100) {
       /**Handle Regular Click */
       const userUpdateObj = {
@@ -183,19 +206,20 @@ exports.createGame = functions.https.onRequest(async (req, res) => {
       games: firestore.FieldValue.arrayUnion(gameId),
     });
 
-    const scoreAdder = setInterval(async () => {
-      const gameRef = await transaction1.get();
-      const gameData = gameRef.data();
-      if (gameData.count < 99) {
-        gameRef.ref
-          .update({count: firestore.FieldValue.increment(1)})
-          .catch(e => console.error(e));
-      } else {
-        clearInterval(scoreAdder);
-      }
-    }, GameCountIncrementInterval * 1000);
-
     return res.status(200).send(transaction1.id);
+  } catch (e) {
+    console.error(e);
+    return res.status(500).send();
+  }
+});
+
+exports.resetGame = functions.https.onRequest(async (req, res) => {
+  const {gameId} = req.body;
+  try {
+    await gamesRef
+      .doc(gameId)
+      .update({creationDate: new Date(), count: 0, winner: ''});
+    return res.status(200).send(gameId);
   } catch (e) {
     console.error(e);
     return res.status(500).send();

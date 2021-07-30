@@ -12,6 +12,8 @@ import ALERT_TYPES from '../../../data/enums/AlertTypes';
 import ComponentLoadingIndicator from '../../small/ComponentLoadingIndicator';
 import AuthService from '../../../services/AuthService';
 import GameCode from './Game/GameCode';
+import data from '../../../data';
+import CustomButton from '../../small/CustomButton';
 
 function InGame({navigation, route}) {
   const gameId = route.params.gameId;
@@ -19,6 +21,16 @@ function InGame({navigation, route}) {
 
   const [loading, setLoading] = useState(false);
   const [game, setGame] = useState(undefined);
+  const [rerender, setRerender] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRerender(prev => !prev);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const score = game ? data.calculateScore(game) : 0;
 
   useEffect(() => {
     const unsub = firestore()
@@ -52,6 +64,12 @@ function InGame({navigation, route}) {
     }
   };
 
+  const resetGame = async () => {
+    setLoading(true);
+    await GameService.resetGame(gameId);
+    setLoading(false);
+  };
+
   return (
     <>
       <LoadingIndicator loading={loading || !game} />
@@ -61,12 +79,17 @@ function InGame({navigation, route}) {
           paddingHorizontal: variables.marginHorizontalAuthPages,
           paddingVertical: variables.marginHorizontalAuthPages,
         }}>
+        {score == 100 && game.creator == AuthService.getOwnUid() && (
+          <CustomButton onPress={resetGame} filled>
+            Restart Game
+          </CustomButton>
+        )}
         {/* <H2 style={{textAlign: 'center'}}>{game?.name}</H2> */}
         <View style={{flexGrow: 1, justifyContent: 'center'}}>
           <View style={{marginVertical: variables.padding}}>
             <H2 style={{textAlign: 'center'}}>
-              {game?.count < 100 ? (
-                game.count
+              {score < 100 ? (
+                score
               ) : game ? (
                 game.winner == AuthService.getOwnUid() ? (
                   '🎉 You Win! 🎉'

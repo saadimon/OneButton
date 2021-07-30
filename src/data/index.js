@@ -1,3 +1,6 @@
+import util from '../util';
+import GAME_STATUS from './enums/GameStatus';
+
 const data = {
   getListOfDocsFromFirebaseQuery: docs => {
     const result = [];
@@ -14,6 +17,23 @@ const data = {
         highestClicks = number;
     });
     return highestClicks;
+  },
+  calculateScore: gameData => {
+    const {count, creationDate, status} = gameData;
+    const timeDiffInTenSec = util.getDifferenceInTenSeconds(
+      creationDate,
+      new Date(),
+    );
+    let timeCount = Math.floor(timeDiffInTenSec);
+    const totalScore = count + timeCount;
+    if (totalScore > 99) {
+      if (status == GAME_STATUS.ACTIVE) {
+        return 99;
+      }
+      if (status == GAME_STATUS.COMPLETED) return 100;
+    }
+    console.log(totalScore);
+    return totalScore;
   },
 };
 
