@@ -32,7 +32,6 @@ const data = {
       }
       if (status == GAME_STATUS.COMPLETED) return 100;
     }
-    console.log(totalScore);
     return totalScore;
   },
 };
