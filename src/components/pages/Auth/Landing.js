@@ -13,7 +13,7 @@ function Landing({navigation, ...props}) {
     AsyncStorage.getItem('previouslyOpened').then(previouslyOpened => {
       if (!previouslyOpened) {
         navigation.navigate(AUTH_NAVIGATION.GET_STARTED_ONE);
-        AsyncStorage.setItem('previouslyOpened', true);
+        AsyncStorage.setItem('previouslyOpened', 'true');
       }
     });
   }, []);

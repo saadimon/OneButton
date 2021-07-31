@@ -6,7 +6,7 @@ import H4 from '../../text/H4';
 import {useIsFocused} from '@react-navigation/native';
 import CustomInput from '../../small/CustomInput';
 import CustomButton from '../../small/CustomButton';
-import {Modal, ScrollView, View} from 'react-native';
+import {Keyboard, Modal, ScrollView, View} from 'react-native';
 import variables from '../../../util/variables';
 import LOGGED_IN_NAVIGATION from '../../../data/enums/LoggedInNavigation';
 import data from '../../../data';
@@ -30,6 +30,8 @@ function Profile({navigation}) {
   const [username, setUsername] = useState('');
   const [changePictureModalVisible, setChangePictureModalVisible] =
     useState(false);
+  const [keyboardOpen, setKeyboardOpen] = useState(false);
+
   const getUserObj = () => {
     setLoading(true);
     AuthService.getUserObj()
@@ -41,6 +43,19 @@ function Profile({navigation}) {
       })
       .finally(() => setLoading(false));
   };
+
+  useEffect(() => {
+    const openListener = Keyboard.addListener('keyboardDidShow', () =>
+      setKeyboardOpen(true),
+    );
+    const closeListener = Keyboard.addListener('keyboardDidHide', () =>
+      setKeyboardOpen(false),
+    );
+    return () => {
+      openListener.remove();
+      closeListener.remove();
+    };
+  }, []);
 
   const updateProfile = () => {
     setLoading(true);
@@ -190,9 +205,11 @@ function Profile({navigation}) {
             </CustomButton>
           </View>
         </ScrollView>
-        <View style={{marginVertical: variables.padding}}>
-          <CustomButton onPress={logout}>Logout</CustomButton>
-        </View>
+        {!keyboardOpen && (
+          <View style={{marginVertical: variables.padding}}>
+            <CustomButton onPress={logout}>Logout</CustomButton>
+          </View>
+        )}
       </View>
     </>
   );

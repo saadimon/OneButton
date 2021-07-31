@@ -37,10 +37,12 @@ function UpdatePassword({navigation}) {
   };
 
   return (
-    <LoadingIndicator loading={loading}>
+    <>
+      <LoadingIndicator loading={loading} />
       <View
         style={{
           paddingHorizontal: variables.marginHorizontalAuthPages,
+          paddingVertical: variables.marginHorizontalAuthPages,
           flex: 1,
           justifyContent: 'center',
         }}>
@@ -70,14 +72,14 @@ function UpdatePassword({navigation}) {
               secureTextEntry
             />
           </View>
-          <View style={{paddingTop: variables.padding}}>
+          <View style={{paddingVertical: variables.padding}}>
             <CustomButton onPress={onPasswordUpdate}>
               Update Password
             </CustomButton>
           </View>
         </ScrollView>
       </View>
-    </LoadingIndicator>
+    </>
   );
 }
 
